@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">  
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="/styles/all.css">
+    <link rel="stylesheet" href="styles/all.css">
 </head>
 <body>
     <nav class="topBar">
@@ -433,7 +433,8 @@
             <input type="submit" value="送出預訂資料" class="orderInfo-btn">
         </form>
     </section>
-
+<!-- axios cdn-->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <!-- 預設 JS，請同學不要修改此處 -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -495,6 +496,7 @@ function closeMenu() {
     menu.classList.remove('openMenu');
 }
 </script>
+<script src="js/config.js"></script>
 <script src="/js/all.js"></script>
 </body>
 </html>
