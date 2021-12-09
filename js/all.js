@@ -10,7 +10,6 @@ function getProductList (){
     .then(function (response) {
         // handle success
           productData = response.data.products;
-          console.log(productData);
           renderProductList(productData);
       })
       .catch(function (error) {
@@ -34,4 +33,44 @@ function renderProductList(productData){
 </li>`;
   })
   productList.innerHTML = str; 
+}
+
+//顯示購物車列表
+let cartData = [];
+const cartList = document.querySelector(".js-cartList");
+
+//取得購物車內資料
+function getCartList(){
+  axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
+    .then(function(response){
+    //將取得購物車資料放到cartData空陣列內
+    cartData = response.data.carts;
+    console.log(cartData);
+    renderCartList(cartData);
+  })
+}
+getCartList();
+
+//將購物車列表渲染到畫面上
+function renderCartList(){
+  let str = "";
+  cartData.forEach((item)=>{
+    str+=` <tr>
+    <td>
+        <div class="cardItem-title">
+            <img src="${item.product.images}" alt="${item.product.description}">
+            <p>${item.product.title}</p>
+        </div>
+    </td>
+    <td>NT$ ${item.product.price}</td>
+    <td>${item.quantity}</td>
+    <td>NT$ ${item.product.price*item.quantity}</td>
+    <td class="discardBtn">
+        <a href="#" class="material-icons">
+            clear
+        </a>
+    </td>
+</tr>`
+  })
+  cartList.innerHTML= str; 
 }

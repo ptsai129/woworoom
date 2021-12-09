@@ -352,6 +352,7 @@
         <h3 class="section-title">我的購物車</h3>
         <div class="overflowWrap">
             <table class="shoppingCart-table">
+            <thead>
                 <tr>
                     <th width="40%">品項</th>
                     <th width="15%">單價</th>
@@ -359,7 +360,9 @@
                     <th width="15%">金額</th>
                     <th width="15%"></th>
                 </tr>
-                <tr>
+            </thead>
+            <tbody class="js-cartList">
+                <!-- <tr>
                     <td>
                         <div class="cardItem-title">
                             <img src="https://i.imgur.com/HvT3zlU.png" alt="">
@@ -374,7 +377,9 @@
                             clear
                         </a>
                     </td>
-                </tr>
+                </tr> -->
+            </tbody>
+            <tfoot>
                 <tr>
                     <td>
                         <a href="#" class="discardAllBtn">刪除所有品項</a>
@@ -386,6 +391,7 @@
                     </td>
                     <td>NT$13,980</td>
                 </tr>
+            </tfoot>
             </table>
         </div>
     </section>
