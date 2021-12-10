@@ -55,7 +55,7 @@ function getCartList(){
   })
 }
 
-
+const cartTotalAmount = document.querySelector(".js-totalAmount");
 //將購物車列表渲染到畫面上
 function renderCartList(){
   let str = "";
@@ -69,7 +69,7 @@ function renderCartList(){
     </td>
     <td>NT$ ${item.product.price}</td>
     <td>${item.quantity}</td>
-    <td>NT$ ${item.product.price*item.quantity}</td>
+    <td class="js-itemTotalPrice">NT$ ${item.product.price*item.quantity}</td>
     <td class="discardBtn">
         <a href="#" class="material-icons">
             clear
@@ -78,6 +78,18 @@ function renderCartList(){
 </tr>`
   })
   cartList.innerHTML= str; 
+  //總金額計算
+  let totalAmount = "";
+  let priceArr = [];
+  let itemTotalPrice = document.querySelectorAll(".js-ItemTotalPrice").value;
+  console.log(itemTotalPrice);//undefined?
+  itemTotalPrice.forEach((item)=>{
+    priceArr.push(item);
+ 
+    
+  })
+  cartTotalAmount.textContent = totalAmount;
+  
 }
 
 
