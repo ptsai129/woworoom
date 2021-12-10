@@ -152,5 +152,42 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}
    //重新取得購物車內資料並渲染畫面
   getCartList();
 })
+})
+
+
+//送出訂單資料
+const submitOrderBtn = document.querySelector(".js-orderSubmitBtn");
+
+submitOrderBtn.addEventListener("click", function(e){
+  e.preventDefault();
+  //把填寫欄位都選取起來
+  let customerName = document.querySelector("#customerName").value;
+  let customerPhone = document.querySelector("#customerPhone").value; 
+  let customerEmail = document.querySelector("#customerEmail").value; 
+  let customerAddress = document.querySelector("#customerAddress").value; 
+  let tradeWay = document.querySelector("#tradeWay").value; 
+  
+  //如果有漏填欄位就不執行送出表單動作
+  if (customerName== "" || customerPhone== "" || customerEmail =="" || customerAddress =="" || tradeWay =="" ){
+    return; 
+  }
+  
+  axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/orders`, {
+   data: {
+    user: {
+      name: customerName,
+      tel: customerPhone,
+      email: customerEmail,
+      address: customerAddress,
+      payment: tradeWay
+    }
+  }
+  }).then(function(response){
+    alert("訂單建立成功");
+  }
+  )
+  
 
 })
+
+
