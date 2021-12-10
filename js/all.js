@@ -1,4 +1,10 @@
+//初始化
+function init(){
+  getProductList();
+  getCartList();
+}
 
+init();
 //選取在顯示產品列表的ul標籤
 const productList = document.querySelector(".js-productList");
 
@@ -17,7 +23,7 @@ function getProductList (){
         console.log(error);
       })
 }
-getProductList();
+
 
 //將產品列表渲染到網頁上
 function renderProductList(productData){
@@ -48,7 +54,7 @@ function getCartList(){
     renderCartList(cartData);
   })
 }
-getCartList();
+
 
 //將購物車列表渲染到畫面上
 function renderCartList(){
@@ -92,6 +98,7 @@ const productID = e.target.getAttribute("data-id");
      cartNum = item.quantity+=1;
    }
  })
+
  axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`, {
    data: {
      "productId": productID,
@@ -99,9 +106,26 @@ const productID = e.target.getAttribute("data-id");
    }
  }).
    then(function (response) {
-     alert("成功將商品加入購物車");
+     alert("您已成功將商品加入購物車");
    })
  //重新取得購物車內資料並渲染畫面
  getCartList();
-
 })
+
+//刪除全部購物車
+const deleteAllBtn = document.querySelector(".js-deleteAllbtn");
+//刪除所有品項按鈕綁監聽
+deleteAllBtn.addEventListener("click", function(e){
+  e.preventDefault();
+  axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
+  .then(function (response) {
+      alert("已清空購物車");
+      //清空資料後 畫面要重新渲染
+      getCartList();
+  })
+  .catch(function (response) {
+    alert("購物車已清空")
+  })
+})
+
+
