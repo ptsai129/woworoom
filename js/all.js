@@ -16,7 +16,7 @@ function getProductList (){
     .then(function (response) {
         // handle success
           productData = response.data.products;
-          renderProductList(productData);
+          renderProductList();
       })
       .catch(function (error) {
         // handle error
@@ -26,7 +26,7 @@ function getProductList (){
 
 
 //將產品列表渲染到網頁上
-function renderProductList(productData){
+function renderProductList(){
   let str ="";
   productData.forEach(function(item){
     str+= `<li class="productCard">
@@ -41,6 +41,34 @@ function renderProductList(productData){
   productList.innerHTML = str; 
 }
 
+//篩選產品列表
+const productFilter = document.querySelector(".js-productFilter");
+
+productFilter.addEventListener('change',function(e){
+  let productCategory = e.target.value;
+  //如果選取欄位內的值不是全部  
+    if (productCategory != "全部"){
+      let str ="";
+      productData.forEach( item =>{
+        //篩選出productData中和productCategory值一樣的品項並渲染到畫面上
+        if(productCategory == item.category){
+          str+=  `<li class="productCard">
+          <h4 class="productType">新品</h4>
+          <img src="${item.images}" alt="${item.description}">
+          <a href="#" class="addCardBtn" data-id="${item.id}">加入購物車</a>
+          <h3>${item.title}</h3>
+          <del class="originPrice">NT$ ${item.origin_price}</del>
+          <p class="nowPrice">NT$ ${item.price}</p>
+      </li>`;
+        }
+      })
+      productList.innerHTML = str; 
+    }
+    return;
+    renderProductList();
+  })
+
+
 //顯示購物車列表
 let cartData = [];
 const cartList = document.querySelector(".js-cartList");
@@ -51,7 +79,7 @@ function getCartList(){
     .then(function(response){
     //將取得購物車資料放到cartData空陣列內
     cartData = response.data.carts;
-    renderCartList(cartData);
+    renderCartList();
   })
 }
 
@@ -82,7 +110,6 @@ function renderCartList(){
   axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
   .then(function(response){
     cartTotalAmount.textContent = response.data.finalTotal; 
- 
 })
 }
 
@@ -171,7 +198,11 @@ submitOrderBtn.addEventListener("click", function(e){
   if (customerName== "" || customerPhone== "" || customerEmail =="" || customerAddress =="" || tradeWay =="" ){
     return; 
   }
-  
+  //如果購物車內沒有商品就不執行送出表單動作??
+  if (cartData == undefined){
+    alert("購物車內沒有商品喔");
+    return; 
+  }
   axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/orders`, {
    data: {
     user: {
