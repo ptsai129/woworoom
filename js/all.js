@@ -64,8 +64,8 @@ productFilter.addEventListener('change',function(e){
       })
       productList.innerHTML = str; 
     }
+    //如果是全部就不執行
     return;
-    renderProductList();
   })
 
 
@@ -198,8 +198,8 @@ submitOrderBtn.addEventListener("click", function(e){
   if (customerName== "" || customerPhone== "" || customerEmail =="" || customerAddress =="" || tradeWay =="" ){
     return; 
   }
-  //如果購物車內沒有商品就不執行送出表單動作??
-  if (cartData == undefined){
+  //如果購物車內沒有商品就不執行送出表單動作
+  if (cartData.length == 0){
     alert("購物車內沒有商品喔");
     return; 
   }
@@ -217,8 +217,6 @@ submitOrderBtn.addEventListener("click", function(e){
     alert("訂單建立成功");
   }
   )
-  
-
 })
 
 
