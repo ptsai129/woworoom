@@ -69,9 +69,9 @@ function renderCartList(){
     </td>
     <td>NT$ ${item.product.price}</td>
     <td>${item.quantity}</td>
-    <td class="js-itemTotalPrice">NT$ ${item.product.price*item.quantity}</td>
+    <td >NT$ ${item.product.price*item.quantity}</td>
     <td class="discardBtn">
-        <a href="#" class="material-icons">
+        <a href="#" class="material-icons" data-id="${item.id}">
             clear
         </a>
     </td>
@@ -79,17 +79,11 @@ function renderCartList(){
   })
   cartList.innerHTML= str; 
   //總金額計算
-  let totalAmount = "";
-  let priceArr = [];
-  let itemTotalPrice = document.querySelectorAll(".js-ItemTotalPrice").value;
-  console.log(itemTotalPrice);//undefined?
-  itemTotalPrice.forEach((item)=>{
-    priceArr.push(item);
+  axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
+  .then(function(response){
+    cartTotalAmount.textContent = response.data.finalTotal; 
  
-    
-  })
-  cartTotalAmount.textContent = totalAmount;
-  
+})
 }
 
 
@@ -119,9 +113,10 @@ const productID = e.target.getAttribute("data-id");
  }).
    then(function (response) {
      alert("您已成功將商品加入購物車");
+     //重新取得購物車內資料並渲染畫面
+      getCartList();
    })
- //重新取得購物車內資料並渲染畫面
- getCartList();
+
 })
 
 //刪除全部購物車
@@ -136,8 +131,26 @@ deleteAllBtn.addEventListener("click", function(e){
       getCartList();
   })
   .catch(function (response) {
-    alert("購物車已清空")
+    alert("購物車已清空");
   })
 })
 
 
+//刪除單筆商品
+cartList.addEventListener('click', function(e){
+//如果點擊到的位置不是刪除的按鈕 就中斷執行
+if(e.target.nodeName != "A"){
+  return; 
+}
+e.preventDefault();
+//取得欲刪除品項的data-id內的值並賦予到cartItemID變數內
+let cartItemID = e.target.getAttribute("data-id");
+
+axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts/${cartItemID}`)
+.then(function (response) {
+  alert("刪除商品成功");
+   //重新取得購物車內資料並渲染畫面
+  getCartList();
+})
+
+})
