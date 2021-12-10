@@ -26,7 +26,7 @@ function renderProductList(productData){
     str+= `<li class="productCard">
     <h4 class="productType">新品</h4>
     <img src="${item.images}" alt="${item.description}">
-    <a href="#" class="addCardBtn">加入購物車</a>
+    <a href="#" class="addCardBtn" data-id="${item.id}">加入購物車</a>
     <h3>${item.title}</h3>
     <del class="originPrice">NT$ ${item.origin_price}</del>
     <p class="nowPrice">NT$ ${item.price}</p>
@@ -45,7 +45,6 @@ function getCartList(){
     .then(function(response){
     //將取得購物車資料放到cartData空陣列內
     cartData = response.data.carts;
-    console.log(cartData);
     renderCartList(cartData);
   })
 }
@@ -76,3 +75,33 @@ function renderCartList(){
 }
 
 
+//加入購物車
+productList.addEventListener('click', function(e){
+//如果點擊到的位置不是加入購物車的按鈕 就中斷執行
+if(e.target.nodeName != "A"){
+  return; 
+}
+e.preventDefault();
+//將取得的button內的data-id值賦予到productID變數上
+const productID = e.target.getAttribute("data-id"); 
+ //購物車商品起始數量為1
+ let cartNum = 1; 
+ cartData.forEach(function(item){
+   //如果cartData內產品id的值 和加入購物車按鈕內的id值一樣 代表是加入同個商品 quantity要+1
+   if (item.product.id == productID){
+     cartNum = item.quantity+=1;
+   }
+ })
+ axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`, {
+   data: {
+     "productId": productID,
+     "quantity": cartNum
+   }
+ }).
+   then(function (response) {
+     alert("成功將商品加入購物車");
+   })
+ //重新取得購物車內資料並渲染畫面
+ getCartList();
+
+})
