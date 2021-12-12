@@ -204,24 +204,29 @@ submitOrderBtn.addEventListener("click", function(e){
     alert("購物車內沒有商品喔");
     return; 
   }
-  axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/orders`, {
-   data: {
-    user: {
-      name: customerName,
-      tel: customerPhone,
-      email: customerEmail,
-      address: customerAddress,
-      payment: tradeWay
-    }
-  }
-  }).then(function(response){
-    alert("訂單建立成功");
-  //重新取得購物車內資料並渲染畫面
-  getCartList();
-  //清空表單
-  form.reset();
-  }
-  )
+  placeOrders();
+
 })
 
 
+//送出訂單
+function placeOrders(){
+  axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/orders`, {
+    data: {
+     user: {
+       name: customerName,
+       tel: customerPhone,
+       email: customerEmail,
+       address: customerAddress,
+       payment: tradeWay
+     }
+   }
+   }).then(function(response){
+     alert("訂單建立成功");
+   //重新取得購物車內資料並渲染畫面
+   getCartList();
+   //清空表單
+   form.reset();
+   })
+
+}
