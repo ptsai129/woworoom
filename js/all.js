@@ -184,6 +184,7 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}
 
 //送出訂單資料
 const submitOrderBtn = document.querySelector(".js-orderSubmitBtn");
+const form = document.querySelector(".orderInfo-form");
 
 submitOrderBtn.addEventListener("click", function(e){
   e.preventDefault();
@@ -215,6 +216,10 @@ submitOrderBtn.addEventListener("click", function(e){
   }
   }).then(function(response){
     alert("訂單建立成功");
+  //重新取得購物車內資料並渲染畫面
+  getCartList();
+  //清空表單
+  form.reset();
   }
   )
 })
