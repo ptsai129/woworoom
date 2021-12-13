@@ -1,8 +1,11 @@
-
-
-
 const orderList = document.querySelector(".js-orderList");
 let orders = [];
+let newData = [];
+//初始化
+function initOrders(){
+    getOrders();
+}
+initOrders();
 
 //取得訂單列表
 function getOrders(){
@@ -12,8 +15,16 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
     }
 }).then(function(response){
     orders = response.data.orders;
-    let str ="";
+    renderOrderList();
+})
+}
+
+
+//渲染訂單資料
+function renderOrderList(){
+    let str="";
     orders.forEach(item =>{
+        
         //訂單品項因為可能有多筆 所以自己跑forEach
         let productStr ="";
         item.products.forEach(product =>{
@@ -32,8 +43,6 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
         let orderMonth = orderTime.getMonth()+1;
         let orderDay = orderTime.getDate();
         let orderTimeFormat = `${orderYear}/${orderMonth}/${orderDay}`;
-        console.log(orderTimeFormat); 
-
 
         str+= `<tr>
         <td>${item.id}</td>
@@ -56,10 +65,52 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
     </tr>`
     })
     orderList.innerHTML = str; 
-})
+    renderPieData();
 }
 
-getOrders();
+
+//組c3 chart需要的資料
+function renderPieData(){
+    //先把資料組成 {'Louvre 雙人床架':1,'Antony 雙人床架': 2,... }
+    let chartObj ={};
+    orders.forEach(item=>{
+        item.products.forEach(chartProduct =>{
+            if( chartObj[chartProduct.title] == undefined){
+                chartObj[chartProduct.title] = 1;
+               }else{
+                chartObj[chartProduct.title] = item.quantity;
+               }
+        }) 
+   
+    })
+
+   //將chartObj內的屬性都取出 放到chartArr陣列內
+   const chartArr = Object.keys(chartObj);
+   chartArr.forEach(function(item, index){
+       let arr = [];
+       arr.push(item);
+       arr.push(chartObj[item]);
+       newData.push(arr);       
+   })
+}
+// C3.js
+let chart = c3.generate({
+    bindto: '#chart', // HTML 元素綁定
+    data: {
+        type: "pie",
+        columns: newData,
+        colors:{
+            "Jordan 雙人床架／雙人加大":"#FFE6FF",
+            "Louvre 單人床架":"#F1E1FF",
+            "Louvre 雙人床架／雙人加大":"#D3A4FF",
+            "Antony 雙人床架／雙人加大":"#B15BFF",
+            "Antony 遮光窗簾":"#007979",
+            "Charles 系列儲物組合":"#8600FF",
+            "Antony 床邊桌":"#5B00AE",
+            "Charles 雙人床架":"#28004D",
+        }
+    },
+});
 
 //修改訂單狀態  沒有如預期的執行???????????
 orderList.addEventListener("click", function(e){
@@ -99,13 +150,6 @@ orderList.addEventListener("click", function(e){
     
 }) 
 
-
-
-
-
-
-
-
 //刪除單筆訂單
 orderList.addEventListener("click", function(e){
     //若選取到的不是刪除按鈕 就中斷
@@ -143,22 +187,5 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/or
 })
 
 
-// C3.js
-let chart = c3.generate({
-    bindto: '#chart', // HTML 元素綁定
-    data: {
-        type: "pie",
-        columns: [
-        ['Louvre 雙人床架', 1],
-        ['Antony 雙人床架', 2],
-        ['Anty 雙人床架', 3],
-        ['其他', 4],
-        ],
-        colors:{
-            "Louvre 雙人床架":"#DACBFF",
-            "Antony 雙人床架":"#9D7FEA",
-            "Anty 雙人床架": "#5434A7",
-            "其他": "#301E5F",
-        }
-    },
-});
+
+
