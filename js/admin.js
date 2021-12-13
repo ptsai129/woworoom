@@ -60,10 +60,10 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
         </td>
         <td>${item.createdAt}</td>
         <td class="orderStatus">
-          <a href="#">${orderStatus}</a>
+          <a href="#"  class="js-orderStatus" data-status="${item.paid}">${orderStatus}</a>
         </td>
         <td>
-          <input type="button" class="delSingleOrder-Btn" data-id="${item.id}"value="刪除">
+          <input type="button" class="delSingleOrder-Btn" data-id="${item.id}" value="刪除">
         </td>
     </tr>`
     })
@@ -73,7 +73,40 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
 
 getOrders();
 
-//修改訂單狀態
+//修改訂單狀態  沒有如預期的執行???????????
+orderList.addEventListener("click", function(e){
+   let orderId = e.target.getAttribute("data-id");
+   let dataStatus  = e.target.getAttribute("data-status");
+   if(e.target.getAttribute("class") == "js-orderStatus"){
+  
+       if(dataStatus == "false"){
+           dataStatus = "true"; 
+           orderStatus = "已付款";
+       }else{
+           dataStatus = "false"; 
+           orderStatus = "未付款";
+       }
+   }
+   axios.put(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`,
+    {
+      "data": {
+        "id": orderId,
+        "paid": dataStatus
+      }
+    },
+    {
+      headers: {
+        'Authorization': token
+      }
+    })
+    .then(function (response) {
+      alert("已完成修改訂單狀態");
+      getOrders();
+    })
+    
+}) 
+
+
 
 
 
