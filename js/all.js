@@ -197,6 +197,7 @@ submitOrderBtn.addEventListener("click", function(e){
   
   //如果有漏填欄位就不執行送出表單動作
   if (customerName== "" || customerPhone== "" || customerEmail =="" || customerAddress =="" || tradeWay =="" ){
+    alert("請完成表單填寫");
     return; 
   }
   //如果購物車內沒有商品就不執行送出表單動作
@@ -204,7 +205,23 @@ submitOrderBtn.addEventListener("click", function(e){
     alert("購物車內沒有商品喔");
     return; 
   }
-  placeOrders();
+  axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/orders`, {
+    data: {
+     user: {
+       name: customerName,
+       tel: customerPhone,
+       email: customerEmail,
+       address: customerAddress,
+       payment: tradeWay
+     }
+   }
+   }).then(function(response){
+     alert("訂單建立成功");
+   //重新取得購物車內資料並渲染畫面
+   getCartList();
+   //清空表單
+   form.reset();
+   })
 
 })
 

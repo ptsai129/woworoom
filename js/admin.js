@@ -21,7 +21,6 @@ let chart = c3.generate({
 
 
 const orderList = document.querySelector(".js-orderList");
-console.log(orderList);
 let orders = [];
 
 //取得訂單列表
@@ -73,3 +72,25 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
 }
 
 getOrders();
+
+//修改訂單狀態
+
+
+
+//刪除單筆訂單
+
+
+//刪除全部訂單
+const deleteAllOrdersBtn = document.querySelector(".js-deleteAllOrders");
+
+deleteAllOrdersBtn.addEventListener('click' ,function(e){
+
+axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`,{
+        headers:{
+            'Authorization': token
+        }
+}).then(function(response){
+    alert("已刪除全部訂單")
+    getOrders();
+})
+})
