@@ -77,8 +77,29 @@ getOrders();
 
 
 
-//刪除單筆訂單
 
+
+
+//刪除單筆訂單
+orderList.addEventListener("click", function(e){
+    //若選取到的不是刪除按鈕 就中斷
+if (e.target.getAttribute("class") != "delSingleOrder-Btn"){
+ return; 
+}
+//取得刪除按鈕內data-id的值
+let deleteItemID = e.target.getAttribute("data-id"); 
+
+axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders/${deleteItemID}`,
+{
+  headers: {
+    'Authorization': token
+  }
+})
+.then(function (response) {
+  alert("刪除特定訂單成功")
+  getOrders();
+})
+})
 
 //刪除全部訂單
 const deleteAllOrdersBtn = document.querySelector(".js-deleteAllOrders");
