@@ -1,22 +1,3 @@
-// C3.js
-let chart = c3.generate({
-    bindto: '#chart', // HTML 元素綁定
-    data: {
-        type: "pie",
-        columns: [
-        ['Louvre 雙人床架', 1],
-        ['Antony 雙人床架', 2],
-        ['Anty 雙人床架', 3],
-        ['其他', 4],
-        ],
-        colors:{
-            "Louvre 雙人床架":"#DACBFF",
-            "Antony 雙人床架":"#9D7FEA",
-            "Anty 雙人床架": "#5434A7",
-            "其他": "#301E5F",
-        }
-    },
-});
 
 
 
@@ -45,6 +26,13 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
         }else{
             orderStatus = "已付款";
         }
+        //將unix時間轉換成西元年月日 x1000是因為要變成毫秒
+        let orderTime = new Date(item.createdAt * 1000);
+        let orderYear = orderTime.getFullYear();
+        let orderMonth = orderTime.getMonth()+1;
+        let orderDay = orderTime.getDate();
+        let orderTimeFormat = `${orderYear}/${orderMonth}/${orderDay}`;
+        console.log(orderTimeFormat); 
 
 
         str+= `<tr>
@@ -58,9 +46,9 @@ axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/order
         <td>
           <p>${productStr}</p>
         </td>
-        <td>${item.createdAt}</td>
+        <td>${orderTimeFormat}</td>
         <td class="orderStatus">
-          <a href="#"  class="js-orderStatus" data-status="${item.paid}">${orderStatus}</a>
+          <a href="#"  class="js-orderStatus" data-status="${item.paid}"  data-statusId="${item.id}">${orderStatus}</a>
         </td>
         <td>
           <input type="button" class="delSingleOrder-Btn" data-id="${item.id}" value="刪除">
@@ -75,23 +63,28 @@ getOrders();
 
 //修改訂單狀態  沒有如預期的執行???????????
 orderList.addEventListener("click", function(e){
-   let orderId = e.target.getAttribute("data-id");
-   let dataStatus  = e.target.getAttribute("data-status");
-   if(e.target.getAttribute("class") == "js-orderStatus"){
-  
-       if(dataStatus == "false"){
-           dataStatus = "true"; 
-           orderStatus = "已付款";
-       }else{
-           dataStatus = "false"; 
-           orderStatus = "未付款";
-       }
+   if(e.target.getAttribute("class") != "js-orderStatus"){
+       return;
    }
+   let paidOrNot = e.target.getAttribute("data-status");
+   console.log(paidOrNot);
+   if(paidOrNot == "false"){
+        paidOrNot.textContent = "true"; 
+        orderStatus = "已付款";
+           
+       }else{
+        paidOrNot.textContent = "false"; 
+        orderStatus = "未付款";
+       }
+    
+    let orderId = e.target.getAttribute("data-statusID");
+
+
    axios.put(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`,
     {
       "data": {
         "id": orderId,
-        "paid": dataStatus
+        "paid": paidOrNot
       }
     },
     {
@@ -148,3 +141,24 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/or
     getOrders();
 })
 })
+
+
+// C3.js
+let chart = c3.generate({
+    bindto: '#chart', // HTML 元素綁定
+    data: {
+        type: "pie",
+        columns: [
+        ['Louvre 雙人床架', 1],
+        ['Antony 雙人床架', 2],
+        ['Anty 雙人床架', 3],
+        ['其他', 4],
+        ],
+        colors:{
+            "Louvre 雙人床架":"#DACBFF",
+            "Antony 雙人床架":"#9D7FEA",
+            "Anty 雙人床架": "#5434A7",
+            "其他": "#301E5F",
+        }
+    },
+});
