@@ -92,25 +92,27 @@ function renderPieData(){
        arr.push(chartObj[item]);
        newData.push(arr);       
    })
-}
-// C3.js
+
+   // C3.js
 let chart = c3.generate({
-    bindto: '#chart', // HTML 元素綁定
-    data: {
-        type: "pie",
-        columns: newData,
-        colors:{
-            "Jordan 雙人床架／雙人加大":"#FFE6FF",
-            "Louvre 單人床架":"#F1E1FF",
-            "Louvre 雙人床架／雙人加大":"#D3A4FF",
-            "Antony 雙人床架／雙人加大":"#B15BFF",
-            "Antony 遮光窗簾":"#007979",
-            "Charles 系列儲物組合":"#8600FF",
-            "Antony 床邊桌":"#5B00AE",
-            "Charles 雙人床架":"#28004D",
-        }
-    },
+  bindto: '#chart', // HTML 元素綁定
+  data: {
+      type: "pie",
+      columns: newData,
+      colors:{
+          "Jordan 雙人床架／雙人加大":"#FFE6FF",
+          "Louvre 單人床架":"#F1E1FF",
+          "Louvre 雙人床架／雙人加大":"#D3A4FF",
+          "Antony 雙人床架／雙人加大":"#B15BFF",
+          "Antony 遮光窗簾":"#007979",
+          "Charles 系列儲物組合":"#8600FF",
+          "Antony 床邊桌":"#5B00AE",
+          "Charles 雙人床架":"#28004D",
+      }
+  },
 });
+}
+
 
 //修改訂單狀態  沒有如預期的執行???????????
 orderList.addEventListener("click", function(e){
@@ -120,11 +122,11 @@ orderList.addEventListener("click", function(e){
    let paidOrNot = e.target.getAttribute("data-status");
    console.log(paidOrNot);
    if(paidOrNot == "false"){
-        paidOrNot.textContent = "true"; 
+        paidOrNot = true; 
         orderStatus = "已付款";
            
        }else{
-        paidOrNot.textContent = "false"; 
+        paidOrNot = false; 
         orderStatus = "未付款";
        }
     
