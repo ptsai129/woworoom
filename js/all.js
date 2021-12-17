@@ -16,7 +16,7 @@ function getProductList (){
     .then(function (response) {
         // handle success
           productData = response.data.products;
-          renderProductList();
+          renderProductList(productData);
       })
       .catch(function (error) {
         // handle error
@@ -26,7 +26,7 @@ function getProductList (){
 
 
 //將產品列表渲染到網頁上
-function renderProductList(){
+function renderProductList(productData){
   let str ="";
   productData.forEach(function(item){
     str+= `<li class="productCard">
@@ -63,9 +63,10 @@ productFilter.addEventListener('change',function(e){
         }
       })
       productList.innerHTML = str; 
-    }
-    //如果是全部就不執行
-    return;
+    }else{
+    //如果選到全部就帶出全部的商品
+    renderProductList(productData);
+  }
   })
 
 
@@ -140,8 +141,8 @@ const productID = e.target.getAttribute("data-id");
  }).
    then(function (response) {
      alert("您已成功將商品加入購物車");
-     //重新取得購物車內資料並渲染畫面
-      getCartList();
+     //重新渲染畫面
+     getCartList();
    })
 
 })
@@ -154,7 +155,7 @@ deleteAllBtn.addEventListener("click", function(e){
   axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
   .then(function (response) {
       alert("已清空購物車");
-      //清空資料後 畫面要重新渲染
+      //畫面重新渲染
       getCartList();
   })
   .catch(function (response) {
@@ -176,8 +177,9 @@ let cartItemID = e.target.getAttribute("data-id");
 axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts/${cartItemID}`)
 .then(function (response) {
   alert("刪除商品成功");
-   //重新取得購物車內資料並渲染畫面
-  getCartList();
+ 
+   //重新渲染畫面
+   getCartList();
 })
 })
 

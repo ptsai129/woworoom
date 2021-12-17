@@ -1,6 +1,6 @@
 const orderList = document.querySelector(".js-orderList");
 let orders = [];
-let newData = [];
+
 //初始化
 function initOrders(){
     getOrders();
@@ -69,8 +69,10 @@ function renderOrderList(){
 }
 
 
-//組c3 chart需要的資料
+//組c3 chart需要的資料 
+
 function renderPieData(){
+    
     //先把資料組成 {'Louvre 雙人床架':1,'Antony 雙人床架': 2,... }
     let chartObj ={};
     orders.forEach(item=>{
@@ -83,7 +85,7 @@ function renderPieData(){
         }) 
    
     })
-
+    let newData = [];
    //將chartObj內的屬性都取出 放到chartArr陣列內
    const chartArr = Object.keys(chartObj);
    chartArr.forEach(function(item, index){
