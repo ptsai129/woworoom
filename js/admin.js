@@ -10,10 +10,11 @@ initOrders();
 //取得訂單列表
 function getOrders(){
 axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders` , {
-    headers:{
-        'Authorization':`${token}`
-    }
-}).then(function(response){
+  headers:{
+      'Authorization':`${token}`
+  }
+})
+.then(function(response){
     orders = response.data.orders;
     renderOrderList();
 })

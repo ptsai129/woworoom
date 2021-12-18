@@ -7,9 +7,8 @@ function init(){
 init();
 //選取在顯示產品列表的ul標籤
 const productList = document.querySelector(".js-productList");
-
-
 let productData = [];
+
 //取得產品列表資料
 function getProductList (){
     axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/products`)
@@ -81,13 +80,13 @@ function getCartList(){
     //將取得購物車資料放到cartData空陣列內
     cartData = response.data.carts;
     cartTotalAmount.textContent = response.data.finalTotal; 
-    renderCartList();
+    renderCartList(cartData);
   })
 }
 
 
 //將購物車列表渲染到畫面上
-function renderCartList(){
+function renderCartList(cartData){
   let str = "";
   cartData.forEach((item)=>{
     str+=` <tr>
@@ -108,11 +107,6 @@ function renderCartList(){
 </tr>`
   })
   cartList.innerHTML= str; 
-  //總金額計算
- // axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
-  //.then(function(response){
-   // cartTotalAmount.textContent = response.data.finalTotal; 
-//})
 }
 
 
@@ -187,6 +181,60 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}
 
 //編輯購物車產品數量
 
+//表單驗證 (使用validate.js)
+
+const validateForm = document.querySelector(".orderInfo-form");
+
+const constraints = {
+  //定義input name屬性值為的設定
+     "姓名": {
+    presence:  {
+      //presense代表必填 若沒有填寫會跳出message訊息
+      message: "請輸入姓名"
+    },
+    length:{
+      minimum:2
+    },
+    
+  },
+    "電話":{
+    presence:{
+      message:"請輸入連絡電話"
+    },
+  },
+    Email: {
+      presence:  {
+      message: "請輸入Email"
+    },
+    from: {
+      email:true
+    },
+    },
+    "寄送地址": {
+      presence:{
+        message: "請輸入寄送地址"
+      },
+    }
+}
+
+const inputs = document.querySelectorAll(".orderInfo-inputWrap input[type=text], .orderInfo-inputWrap input[type=tel] ,.orderInfo-inputWrap input[type=email], #tradeWay ");
+let errors = validate(validateForm , constraints);
+inputs.forEach((item) =>{
+  item.addEventListener("change" ,function(e){
+    //將每個input下一行的p標籤都選取起來 並將內容設定為空字串
+    item.nextElementSibling.textContent = "";
+    if(errors){
+    Object.keys(errors).forEach(function(keys){
+      if(e.target.getAttribute("name") === keys){
+        document.querySelector(`.${keys}`).textContent = errors[keys]; 
+      }
+      })
+    }
+  })
+ })
+   
+  
+
 
 
 //送出訂單資料
@@ -201,12 +249,14 @@ submitOrderBtn.addEventListener("click", function(e){
   let customerEmail = document.querySelector("#customerEmail").value; 
   let customerAddress = document.querySelector("#customerAddress").value; 
   let tradeWay = document.querySelector("#tradeWay").value; 
-  
+  let errors = validate(validateForm , constraints);
   //如果有漏填欄位就不執行送出表單動作
   if (customerName== "" || customerPhone== "" || customerEmail =="" || customerAddress =="" || tradeWay =="" ){
     alert("請完成表單填寫");
     return; 
   }
+
+
   //如果購物車內沒有商品就不執行送出表單動作
   if (cartData.length == 0){
     alert("購物車內沒有商品喔");
