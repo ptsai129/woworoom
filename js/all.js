@@ -73,18 +73,19 @@ productFilter.addEventListener('change',function(e){
 //顯示購物車列表
 let cartData = [];
 const cartList = document.querySelector(".js-cartList");
-
+const cartTotalAmount = document.querySelector(".js-totalAmount");
 //取得購物車內資料
 function getCartList(){
   axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
     .then(function(response){
     //將取得購物車資料放到cartData空陣列內
     cartData = response.data.carts;
+    cartTotalAmount.textContent = response.data.finalTotal; 
     renderCartList();
   })
 }
 
-const cartTotalAmount = document.querySelector(".js-totalAmount");
+
 //將購物車列表渲染到畫面上
 function renderCartList(){
   let str = "";
@@ -108,10 +109,10 @@ function renderCartList(){
   })
   cartList.innerHTML= str; 
   //總金額計算
-  axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
-  .then(function(response){
-    cartTotalAmount.textContent = response.data.finalTotal; 
-})
+ // axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
+  //.then(function(response){
+   // cartTotalAmount.textContent = response.data.finalTotal; 
+//})
 }
 
 
@@ -182,6 +183,10 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}
    getCartList();
 })
 })
+
+
+//編輯購物車產品數量
+
 
 
 //送出訂單資料
