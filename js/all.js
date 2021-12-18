@@ -194,45 +194,44 @@ const constraints = {
     },
     length:{
       minimum:2
-    },
-    
+    }
   },
     "電話":{
     presence:{
       message:"請輸入連絡電話"
     },
+    length:{
+    minimum:7, 
+    message: "需超過7碼"
+    }
   },
     Email: {
       presence:  {
       message: "請輸入Email"
-    },
-    from: {
-      email:true
-    },
+    }
     },
     "寄送地址": {
       presence:{
         message: "請輸入寄送地址"
-      },
+      }
     }
 }
 
-const inputs = document.querySelectorAll(".orderInfo-inputWrap input[type=text], .orderInfo-inputWrap input[type=tel] ,.orderInfo-inputWrap input[type=email], #tradeWay ");
-
+const inputs = document.querySelectorAll("input[type=text],input[type=tel] ,input[type=email], #tradeWay");
 inputs.forEach((item) =>{
   item.addEventListener("change" ,function(e){
-    //將每個input下一行的p標籤都選取起來 並將內容設定為空字串
-    item.nextElementSibling.textContent = "";
-    let errors = validate(validateForm , constraints);
+   
+    let errors = validate(validateForm, constraints);
     if(errors){
     Object.keys(errors).forEach(function(keys){
       if(e.target.getAttribute("name") === keys){
-        document.querySelector(`.${keys}`).textContent = errors[keys]; 
+        document.querySelector(`[data-message="${keys}"]`).textContent = errors[keys]; 
       }
       })
+    }else{
+      return;
     }
   });
-
  });
    
   
@@ -241,7 +240,6 @@ inputs.forEach((item) =>{
 
 //送出訂單資料
 const submitOrderBtn = document.querySelector(".js-orderSubmitBtn");
-
 
 submitOrderBtn.addEventListener("click", function(e){
   e.preventDefault();
@@ -252,7 +250,7 @@ submitOrderBtn.addEventListener("click", function(e){
   let customerAddress = document.querySelector("#customerAddress").value; 
   let tradeWay = document.querySelector("#tradeWay").value; 
   //如果有漏填欄位就不執行送出表單動作
-  if (inputs.value =""){
+  if (customerName == "" || customerPhone == "" || customerEmail =="" || customerAddress ==""){
     alert("請完成表單填寫");
     return;
   }
