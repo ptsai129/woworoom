@@ -218,11 +218,12 @@ const constraints = {
 }
 
 const inputs = document.querySelectorAll(".orderInfo-inputWrap input[type=text], .orderInfo-inputWrap input[type=tel] ,.orderInfo-inputWrap input[type=email], #tradeWay ");
-let errors = validate(validateForm , constraints);
+
 inputs.forEach((item) =>{
   item.addEventListener("change" ,function(e){
     //將每個input下一行的p標籤都選取起來 並將內容設定為空字串
     item.nextElementSibling.textContent = "";
+    let errors = validate(validateForm , constraints);
     if(errors){
     Object.keys(errors).forEach(function(keys){
       if(e.target.getAttribute("name") === keys){
@@ -230,8 +231,9 @@ inputs.forEach((item) =>{
       }
       })
     }
-  })
- })
+  });
+
+ });
    
   
 
@@ -239,7 +241,7 @@ inputs.forEach((item) =>{
 
 //送出訂單資料
 const submitOrderBtn = document.querySelector(".js-orderSubmitBtn");
-const form = document.querySelector(".orderInfo-form");
+
 
 submitOrderBtn.addEventListener("click", function(e){
   e.preventDefault();
@@ -249,13 +251,11 @@ submitOrderBtn.addEventListener("click", function(e){
   let customerEmail = document.querySelector("#customerEmail").value; 
   let customerAddress = document.querySelector("#customerAddress").value; 
   let tradeWay = document.querySelector("#tradeWay").value; 
-  let errors = validate(validateForm , constraints);
   //如果有漏填欄位就不執行送出表單動作
-  if (customerName== "" || customerPhone== "" || customerEmail =="" || customerAddress =="" || tradeWay =="" ){
+  if (inputs.value =""){
     alert("請完成表單填寫");
-    return; 
+    return;
   }
-
 
   //如果購物車內沒有商品就不執行送出表單動作
   if (cartData.length == 0){
@@ -277,7 +277,7 @@ submitOrderBtn.addEventListener("click", function(e){
    //重新取得購物車內資料並渲染畫面
    getCartList();
    //清空表單
-   form.reset();
+   validateForm.reset();
    })
 
 })
