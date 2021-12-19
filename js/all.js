@@ -211,8 +211,11 @@ const constraints = {
   },
     Email: {
       presence:  {
-      message: "請輸入Email"
-    }
+      message: "請輸入Email",
+    },  
+    email: {
+      message: "請輸入正確Email",
+    }   
     },
     "寄送地址": {
       presence:{

@@ -187,7 +187,8 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/or
         }
 }).then(function(response){
     alert("已刪除全部訂單")
-    getOrders();
+    orders = response.data.orders;
+    renderOrderList();
 })
 })
 
