@@ -137,11 +137,12 @@ const productID = e.target.getAttribute("data-id");
    then(function (response) {
      alert("您已成功將商品加入購物車");
      //重新渲染畫面
-     getCartList();
-   })
-
+     cartData = response.data.carts;
+     cartTotalAmount.textContent = response.data.finalTotal;
+     renderCartList(cartData);
+  
 })
-
+})
 //刪除全部購物車
 const deleteAllBtn = document.querySelector(".js-deleteAllbtn");
 //刪除所有品項按鈕綁監聽
@@ -151,7 +152,9 @@ deleteAllBtn.addEventListener("click", function(e){
   .then(function (response) {
       alert("已清空購物車");
       //畫面重新渲染
-      getCartList();
+      cartData = response.data.carts;
+      cartTotalAmount.textContent = response.data.finalTotal;
+      renderCartList(cartData);
   })
   .catch(function (response) {
     alert("購物車已清空");
@@ -172,9 +175,10 @@ let cartItemID = e.target.getAttribute("data-id");
 axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts/${cartItemID}`)
 .then(function (response) {
   alert("刪除商品成功");
- 
    //重新渲染畫面
-   getCartList();
+   cartData = response.data.carts;
+   cartTotalAmount.textContent = response.data.finalTotal;
+    renderCartList(cartData);
 })
 })
 
@@ -300,5 +304,4 @@ function placeOrders(){
    //清空表單
    form.reset();
    })
-
 }
