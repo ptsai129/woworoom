@@ -97,7 +97,7 @@ function renderCartList(cartData){
         </div>
     </td>
     <td>NT$ ${item.product.price}</td>
-    <td>${item.quantity}</td>
+    <td><input type="number" class="purchaseNum" min="1" max="10" value="${item.quantity}" data-id="${item.id}"></td>
     <td >NT$ ${item.product.price*item.quantity}</td>
     <td class="discardBtn">
         <a href="#" class="material-icons" data-id="${item.id}">
@@ -107,6 +107,35 @@ function renderCartList(cartData){
 </tr>`
   })
   cartList.innerHTML= str; 
+  //選取購物車數量欄位
+  const purchaseNum = document.querySelectorAll(".purchaseNum");
+     purchaseNum.forEach(item=>{
+       //購物車數量輸入欄位綁監聽
+      item.addEventListener('change',function(e){
+        let inputNum = e.target.value;
+        let inputID = e.target.dataset.id;
+        editCartNum(inputNum, inputID);
+      })
+    })
+    
+}
+
+ //編輯購物車產品數量
+function editCartNum(inputNum, inputID) {
+  if (inputNum > 0) {
+    axios.patch(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`,  {
+      data: {
+        id: inputID,
+        quantity: parseInt(inputNum)
+      }
+    })
+      .then(function (res) {
+        getCartList();
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      }
 }
 
 
@@ -143,6 +172,14 @@ const productID = e.target.getAttribute("data-id");
   
 })
 })
+
+
+
+
+
+
+
+
 //刪除全部購物車
 const deleteAllBtn = document.querySelector(".js-deleteAllbtn");
 //刪除所有品項按鈕綁監聽
@@ -183,7 +220,7 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}
 })
 
 
-//編輯購物車產品數量
+
 
 //表單驗證 (使用validate.js)
 

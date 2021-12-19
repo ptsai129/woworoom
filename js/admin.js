@@ -9,11 +9,7 @@ initOrders();
 
 //取得訂單列表
 function getOrders(){
-axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders` , {
-  headers:{
-      'Authorization':`${token}`
-  }
-})
+axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders` , config)
 .then(function(response){
     orders = response.data.orders;
     renderOrderList();
@@ -143,11 +139,8 @@ orderList.addEventListener("click", function(e){
         "paid": paidOrNot
       }
     },
-    {
-      headers: {
-        'Authorization': token
-      }
-    })
+   config
+   )
     .then(function (response) {
       alert("已完成修改訂單狀態");
       getOrders();
@@ -165,11 +158,7 @@ if (e.target.getAttribute("class") != "delSingleOrder-Btn"){
 let deleteItemID = e.target.getAttribute("data-id"); 
 
 axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders/${deleteItemID}`,
-{
-  headers: {
-    'Authorization': token
-  }
-})
+ config )
 .then(function (response) {
   alert("刪除特定訂單成功")
   getOrders();
@@ -181,11 +170,8 @@ const deleteAllOrdersBtn = document.querySelector(".js-deleteAllOrders");
 
 deleteAllOrdersBtn.addEventListener('click' ,function(e){
 
-axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`,{
-        headers:{
-            'Authorization': token
-        }
-}).then(function(response){
+axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`, config
+).then(function(response){
     alert("已刪除全部訂單")
     orders = response.data.orders;
     renderOrderList();
