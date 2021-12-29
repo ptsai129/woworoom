@@ -12,13 +12,13 @@ function getOrders(){
 axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders` , config)
 .then(function(response){
   orders = response.data.orders;
-  renderOrderList();
+  renderOrderList(orders);
 })
 }
 
 
 //渲染訂單資料
-function renderOrderList(){
+function renderOrderList(orders){
     let str="";
     orders.forEach(item =>{
         
@@ -70,14 +70,14 @@ function renderOrderList(){
 
 function renderPieData(){
     
-    //先把資料組成 {'Louvre 雙人床架':1,'Antony 雙人床架': 2,... }
+    //先把資料組成 {'Louvre 雙人床架':金額,'Antony 雙人床架': 金額,... }
     let chartObj ={};
     orders.forEach(item=>{
         item.products.forEach(chartProduct =>{
             if( chartObj[chartProduct.title] == undefined){
-                chartObj[chartProduct.title] = 1;
+                chartObj[chartProduct.title] = chartProduct.quantity *chartProduct.price;
                }else{
-                chartObj[chartProduct.title] = item.quantity;
+                chartObj[chartProduct.title] += chartProduct.quantity *chartProduct.price;
                }
         }) 
    
@@ -91,13 +91,29 @@ function renderPieData(){
        arr.push(chartObj[item]);
        newData.push(arr);       
    })
+  //使用sort將newData內金額由高到低排列
+   newData.sort(function(a,b){
+      return b[1] - a[1];
+   })
+ 
+   let other = ['其他'];
+   newData.forEach((item, index, arr) => {
+     if (index >= 3) {
+       // 將索引 3 以後的索引丟到other陣列
+       other.push(item[1]);
+        // 將索引 3 以後的索引全部移除再把 other 陣列加入
+       newData.splice(3, newData.length, other);
+     }
+   })
+  
 
+ 
    // C3.js
-let chart = c3.generate({
+  let chart = c3.generate({
   bindto: '#chart', // HTML 元素綁定
   data: {
       type: "pie",
-      columns: newData,
+      columns: newData, //顯示前三名營收品項，其他品項合併顯示為其他
       colors:{
           "Jordan 雙人床架／雙人加大":"#FFE6FF",
           "Louvre 單人床架":"#F1E1FF",
@@ -113,40 +129,38 @@ let chart = c3.generate({
 }
 
 
-//修改訂單狀態  沒有如預期的執行???????????
+//更改訂單狀態
 orderList.addEventListener("click", function(e){
    if(e.target.getAttribute("class") != "js-orderStatus"){
        return;
    }
    let paidOrNot = e.target.getAttribute("data-status");
-   console.log(paidOrNot);
+   let orderId = e.target.getAttribute("data-statusID");
    if(paidOrNot == "false"){
         paidOrNot = true; 
         orderStatus = "已付款";
-           
+      
        }else{
         paidOrNot = false; 
         orderStatus = "未付款";
+        
        }
-    
-    let orderId = e.target.getAttribute("data-statusID");
-
-
-   axios.put(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`,
-    {
-      "data": {
-        "id": orderId,
-        "paid": paidOrNot
-      }
-    },
-   config
-   )
-    .then(function (response) {
-      alert("已完成修改訂單狀態");
-      renderOrderList(response.data.orders);
-    })
-    
+       axios.put(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`,
+       {
+         "data": {
+           "id": orderId,
+           "paid": paidOrNot
+         }
+       },
+      config
+      )
+       .then(function (response) {
+         getOrders();
+         alert("已完成修改訂單狀態");
+       })
 }) 
+
+
 
 //刪除單筆訂單
 orderList.addEventListener("click", function(e){
@@ -161,7 +175,7 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/or
  config )
 .then(function (response) {
   alert("刪除特定訂單成功")
-  renderOrderList(response.data.orders);
+  renderOrderList(orders);
 })
 })
 
@@ -173,7 +187,7 @@ deleteAllOrdersBtn.addEventListener('click' ,function(e){
 axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`, config
 ).then(function(response){
     alert("已刪除全部訂單")
-    renderOrderList(response.data.orders);
+    renderOrderList(orders);
 })
 })
 
