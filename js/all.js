@@ -45,26 +45,13 @@ const productFilter = document.querySelector(".js-productFilter");
 
 productFilter.addEventListener('change',function(e){
   let productCategory = e.target.value;
-  //如果選取欄位內的值不是全部  
-    if (productCategory != "全部"){
-      let str ="";
-      productData.forEach( item =>{
-        //篩選出productData中和productCategory值一樣的品項並渲染到畫面上
-        if(productCategory == item.category){
-          str+=  `<li class="productCard">
-          <h4 class="productType">新品</h4>
-          <img src="${item.images}" alt="${item.description}">
-          <a href="#" class="addCardBtn" data-id="${item.id}">加入購物車</a>
-          <h3>${item.title}</h3>
-          <del class="originPrice">NT$ ${item.origin_price}</del>
-          <p class="nowPrice">NT$ ${item.price}</p>
-      </li>`;
-        }
-      })
-      productList.innerHTML = str; 
+  //選到全部帶出全部的
+    if (productCategory == "全部"){
+      renderProductList(productData);
+      return;
     }else{
-    //如果選到全部就帶出全部的商品
-    renderProductList(productData);
+    //如果選到的不是全部
+    renderProductList(productData.filter((item) => item.category === e.target.value));
   }
   })
 
