@@ -114,6 +114,9 @@ function renderCartList(cartData){
       item.addEventListener('change',function(e){
         let inputNum = e.target.value;
         let inputID = e.target.dataset.id;
+        if (inputNum <= 0){
+          alert("輸入數量錯誤");
+        }
         editCartNum(inputNum, inputID);
       })
     })
@@ -129,8 +132,8 @@ function editCartNum(inputNum, inputID) {
         quantity: parseInt(inputNum)
       }
     })
-      .then(function (res) {
-        getCartList();
+      .then(function (response) {
+        renderCartList(response.data.carts);
       })
       .catch(function (error) {
         console.log(error);
@@ -266,10 +269,12 @@ inputs.forEach((item) =>{
   item.addEventListener("change" ,function(e){
    
     let errors = validate(validateForm, constraints);
+    item.nextElementSibling.textContent='';
     if(errors){
     Object.keys(errors).forEach(function(keys){
       if(e.target.getAttribute("name") === keys){
         document.querySelector(`[data-message="${keys}"]`).textContent = errors[keys]; 
+        
       }
       })
     }else{
@@ -287,6 +292,7 @@ const submitOrderBtn = document.querySelector(".js-orderSubmitBtn");
 
 submitOrderBtn.addEventListener("click", function(e){
   e.preventDefault();
+  validate(validateForm, constraints); 
   //把填寫欄位都選取起來
   let customerName = document.querySelector("#customerName").value;
   let customerPhone = document.querySelector("#customerPhone").value; 

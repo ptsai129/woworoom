@@ -11,8 +11,8 @@ initOrders();
 function getOrders(){
 axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders` , config)
 .then(function(response){
-    orders = response.data.orders;
-    renderOrderList();
+  orders = response.data.orders;
+  renderOrderList();
 })
 }
 
@@ -143,7 +143,7 @@ orderList.addEventListener("click", function(e){
    )
     .then(function (response) {
       alert("已完成修改訂單狀態");
-      getOrders();
+      renderOrderList(response.data.orders);
     })
     
 }) 
@@ -161,7 +161,7 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/or
  config )
 .then(function (response) {
   alert("刪除特定訂單成功")
-  getOrders();
+  renderOrderList(response.data.orders);
 })
 })
 
@@ -173,8 +173,7 @@ deleteAllOrdersBtn.addEventListener('click' ,function(e){
 axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`, config
 ).then(function(response){
     alert("已刪除全部訂單")
-    orders = response.data.orders;
-    renderOrderList();
+    renderOrderList(response.data.orders);
 })
 })
 
