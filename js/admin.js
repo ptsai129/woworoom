@@ -175,7 +175,7 @@ axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/or
  config )
 .then(function (response) {
   alert("刪除特定訂單成功")
-  renderOrderList(orders);
+  renderOrderList(response.data.orders);
 })
 })
 
@@ -187,7 +187,7 @@ deleteAllOrdersBtn.addEventListener('click' ,function(e){
 axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`, config
 ).then(function(response){
     alert("已刪除全部訂單")
-    renderOrderList(orders);
+    renderOrderList( response.data.orders);
 })
 })
 
